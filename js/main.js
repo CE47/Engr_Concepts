@@ -107,7 +107,16 @@ function cardMarkup(lab, index) {
 }
 
 function renderHub() {
-  labGrid.innerHTML = labs.map(cardMarkup).join("");
+  const grouped = new Map();
+  labs.forEach((lab) => {
+    if (!grouped.has(lab.section)) grouped.set(lab.section, []);
+    grouped.get(lab.section).push(lab);
+  });
+  let index = 0;
+  labGrid.innerHTML = [...grouped].map(([section, items]) => `
+    <div class="lab-section-heading"><span class="section-mark">✦</span><h3>${section}</h3><span>${items.length} labs</span></div>
+    ${items.map((lab) => cardMarkup(lab, index++)).join("")}
+  `).join("");
   updateStarUI();
 }
 

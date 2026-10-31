@@ -823,6 +823,35 @@ body.is-muted .icon-btn .icon-off {
   gap: 18px;
 }
 
+.lab-section-heading {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 22px 0 -3px;
+  padding: 0 2px 10px;
+  border-bottom: 1px solid rgba(142, 231, 255, 0.14);
+}
+
+.lab-section-heading h3 {
+  margin: 0;
+  color: var(--text);
+  font-family: var(--font-head);
+  font-size: 1.18rem;
+  font-weight: 600;
+}
+
+.lab-section-heading > span:last-child {
+  margin-left: auto;
+  color: var(--muted-2);
+  font-size: 0.62rem;
+  font-weight: 900;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.lab-section-heading .section-mark { color: var(--yellow); }
+
 .lab-card {
   position: relative;
   display: flex;
