@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#071426">
+  <meta name="description" content="An animated, hands-on engineering playground for curious kids. Build bridges, launch rockets, float boats, and more.">
+  <title>Engineer Playground — Build. Test. Play.</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%230b1b33'/%3E%3Cpath d='M50 12l7 18 19 3-14 13 4 19-16-9-16 9 4-19-14-13 19-3z' fill='%23ffd166'/%3E%3C/svg%3E">
+
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/labs.css">
+</head>
+<body>
+  <div class="backdrop" aria-hidden="true">
+    <div class="blueprint-grid"></div>
+    <div class="orb orb-a"></div>
+    <div class="orb orb-b"></div>
+    <div class="orb orb-c"></div>
+    <div class="floaty floaty-gear gear-a">⚙</div>
+    <div class="floaty floaty-gear gear-b">⚙</div>
+    <div class="floaty floaty-nut nut-a">⬡</div>
+    <div class="floaty floaty-bolt bolt-a">⚡</div>
+    <div class="floaty floaty-ruler">📐</div>
+  </div>
+
+  <header class="topbar">
+    <button class="brand" id="homeBtn" aria-label="Go to the lab hub">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 64 64" role="img">
+          <defs>
+            <linearGradient id="brandGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#5ee7ff"/>
+              <stop offset="1" stop-color="#ffd166"/>
+            </linearGradient>
+          </defs>
+          <circle cx="32" cy="32" r="27" fill="none" stroke="url(#brandGrad)" stroke-width="4" stroke-dasharray="9 6"/>
+          <circle cx="32" cy="32" r="13" fill="url(#brandGrad)"/>
+          <circle cx="32" cy="32" r="5" fill="#071426"/>
+          <g stroke="url(#brandGrad)" stroke-width="5" stroke-linecap="round">
+            <path d="M32 2v9M32 53v9M2 32h9M53 32h9"/>
+            <path d="M11 11l6 6M47 47l6 6M53 11l-6 6M17 47l-6 6"/>
+          </g>
+        </svg>
+      </span>
+      <span class="brand-copy">
+        <strong>ENGINEER</strong>
+        <small>PLAYGROUND</small>
+      </span>
+    </button>
+
+    <div class="top-actions">
+      <div class="star-counter" id="starCounter" title="Mission stars" aria-label="0 of 8 stars earned">
+        <span class="star-icon" aria-hidden="true">★</span>
+        <span class="star-count" id="starCount">0</span>
+        <span class="star-total">/ 8</span>
+      </div>
+      <button class="icon-btn" id="soundBtn" aria-label="Mute sound" title="Sound">
+        <span class="icon-on" aria-hidden="true">🔊</span>
+        <span class="icon-off" aria-hidden="true">🔇</span>
+      </button>
+      <button class="icon-btn help-trigger" id="helpBtn" aria-label="Help and info" title="Help">?</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ============================== HUB ============================== -->
+    <section id="hubView" class="view hub-view">
+      <div class="hero">
+        <div class="hero-copy">
+          <div class="eyebrow"><span class="live-dot"></span> 8 labs · endless tries</div>
+          <h1 class="hero-title">
+            <span class="line line-1">BUILD<span class="dot">.</span></span>
+            <span class="line line-2">TEST<span class="dot">.</span></span>
+            <span class="line line-3">PLAY<span class="dot">.</span></span>
+          </h1>
+          <p class="hero-sub">Try it. Break it. Build it better.</p>
+          <div class="hero-cta-row">
+            <button class="primary-btn" id="startBtn">
+              <span>Start building</span>
+              <span class="btn-arrow" aria-hidden="true">→</span>
+            </button>
+            <div class="hero-mini-note"><span aria-hidden="true">👆</span> No reading. Just doing.</div>
+          </div>
+        </div>
+
+        <div class="hero-art" aria-hidden="true">
+          <div class="hero-sun"></div>
+          <div class="hero-ring ring-one"></div>
+          <div class="hero-ring ring-two"></div>
+          <div class="hero-machine">
+            <div class="gear-cluster">
+              <span class="big-gear">⚙</span>
+              <span class="small-gear">⚙</span>
+            </div>
+            <div class="bolt-wrap">
+              <!-- Bolt the mascot -->
+              <svg class="bolt" viewBox="0 0 260 310" role="img" aria-label="Bolt the robot">
+                <defs>
+                  <linearGradient id="boltBody" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stop-color="#e9fbff"/>
+                    <stop offset="1" stop-color="#9be8ff"/>
+                  </linearGradient>
+                  <linearGradient id="boltFace" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stop-color="#173a5e"/>
+                    <stop offset="1" stop-color="#0a1d34"/>
+                  </linearGradient>
+                  <linearGradient id="boltHat" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stop-color="#ffd166"/>
+                    <stop offset="1" stop-color="#ff9f1c"/>
+                  </linearGradient>
+                </defs>
+                <g class="bolt-bob">
+                  <ellipse cx="130" cy="292" rx="72" ry="12" fill="#03101f" opacity=".35"/>
+                  <line x1="130" y1="42" x2="130" y2="18" stroke="#8ee7ff" stroke-width="7" stroke-linecap="round"/>
+                  <circle class="antenna-ball" cx="130" cy="14" r="12" fill="#ff6b6b"/>
+                  <path d="M67 82c0-30 24-54 54-54h18c30 0 54 24 54 54v38c0 30-24 54-54 54h-18c-30 0-54-24-54-54z" fill="url(#boltHat)"/>
+                  <rect x="58" y="70" width="144" height="118" rx="44" fill="url(#boltBody)" stroke="#0b2c47" stroke-width="5"/>
+                  <rect x="81" y="94" width="98" height="66" rx="28" fill="url(#boltFace)" stroke="#0b2c47" stroke-width="5"/>
+                  <g class="bolt-eyes">
+                    <circle cx="108" cy="124" r="9" fill="#5ee7ff"/>
+                    <circle cx="152" cy="124" r="9" fill="#5ee7ff"/>
+                    <circle cx="111" cy="121" r="3" fill="#ffffff"/>
+                    <circle cx="155" cy="121" r="3" fill="#ffffff"/>
+                  </g>
+                  <path d="M113 145q17 12 34 0" fill="none" stroke="#5ee7ff" stroke-width="5" stroke-linecap="round"/>
+                  <circle cx="78" cy="118" r="8" fill="#ff8fab" opacity=".75"/>
+                  <circle cx="182" cy="118" r="8" fill="#ff8fab" opacity=".75"/>
+                  <rect x="89" y="185" width="82" height="76" rx="28" fill="#dff8ff" stroke="#0b2c47" stroke-width="5"/>
+                  <circle cx="130" cy="220" r="23" fill="#0b2c47"/>
+                  <circle class="chest-gear" cx="130" cy="220" r="13" fill="none" stroke="#5ee7ff" stroke-width="6" stroke-dasharray="7 5"/>
+                  <path d="M89 204l-27 19M171 204l27 19" stroke="#0b2c47" stroke-width="12" stroke-linecap="round"/>
+                  <circle cx="59" cy="225" r="12" fill="#ffd166" stroke="#0b2c47" stroke-width="5"/>
+                  <circle cx="201" cy="225" r="12" fill="#ffd166" stroke="#0b2c47" stroke-width="5"/>
+                  <path d="M101 260v17M159 260v17" stroke="#0b2c47" stroke-width="12" stroke-linecap="round"/>
+                  <ellipse cx="101" cy="282" rx="20" ry="10" fill="#0b2c47"/>
+                  <ellipse cx="159" cy="282" rx="20" ry="10" fill="#0b2c47"/>
+                </g>
+              </svg>
+              <div class="bolt-bubble">Let's tinker!</div>
+            </div>
+            <div class="hero-platform">
+              <span class="platform-light"></span>
+              <span class="platform-light"></span>
+              <span class="platform-light"></span>
+            </div>
+            <span class="spark spark-a">✦</span>
+            <span class="spark spark-b">✦</span>
+            <span class="spark spark-c">✦</span>
+            <div class="hero-wrench">🔧</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="progress-strip" aria-label="Adventure progress">
+        <div class="progress-label">
+          <span class="progress-badge" aria-hidden="true">🏆</span>
+          <span>Adventure progress</span>
+        </div>
+        <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="progress-value" id="progressValue">0 / 8</div>
+      </div>
+
+      <div class="section-head">
+        <div>
+          <div class="eyebrow small"><span class="live-dot"></span> pick a lab</div>
+          <h2>What will you build?</h2>
+        </div>
+        <div class="section-legend"><span aria-hidden="true">★</span> = mission complete</div>
+      </div>
+
+      <div class="lab-grid" id="labGrid"></div>
+
+      <div class="design-loop">
+        <div class="loop-copy">
+          <div class="eyebrow small"><span class="live-dot"></span> how engineers think</div>
+          <h2>The build loop</h2>
+          <p>Every lab uses the same superpower.</p>
+        </div>
+        <div class="loop-track">
+          <div class="loop-line"></div>
+          <div class="loop-step" style="--i:0"><span class="loop-icon">❓</span><span>ASK</span></div>
+          <div class="loop-step" style="--i:1"><span class="loop-icon">💡</span><span>DREAM</span></div>
+          <div class="loop-step" style="--i:2"><span class="loop-icon">✏️</span><span>PLAN</span></div>
+          <div class="loop-step" style="--i:3"><span class="loop-icon">🔨</span><span>BUILD</span></div>
+          <div class="loop-step" style="--i:4"><span class="loop-icon">🧪</span><span>TEST</span></div>
+          <div class="loop-step" style="--i:5"><span class="loop-icon">🔁</span><span>TWEAK</span></div>
+        </div>
+      </div>
+
+      <footer class="site-footer">
+        <span>Made for curious builders.</span>
+        <span class="footer-sep">•</span>
+        <span>No wrong answers. Just clues.</span>
+      </footer>
+    </section>
+
+    <!-- ============================== LAB ============================== -->
+    <section id="labView" class="view lab-view hidden" aria-live="polite">
+      <div class="lab-top">
+        <button class="back-btn" id="backBtn"><span aria-hidden="true">←</span> Labs</button>
+        <div class="lab-heading">
+          <span class="lab-icon" id="labIcon" aria-hidden="true">🚀</span>
+          <div>
+            <div class="lab-kicker" id="labKicker">LAB 01</div>
+            <h2 id="labTitle">Rocket Sled</h2>
+          </div>
+        </div>
+        <div class="lab-top-actions">
+          <div class="lab-star" id="labStar" title="Mission star">★</div>
+          <button class="icon-btn small" id="labHelpBtn" aria-label="Lab hint" title="Hint">?</button>
+        </div>
+      </div>
+
+      <div class="mission-bar">
+        <span class="mission-label">MISSION</span>
+        <span class="mission-text" id="labMission">Stop at the flag!</span>
+        <span class="mission-status" id="missionStatus"></span>
+      </div>
+
+      <div class="lab-stage" id="labStage"></div>
+    </section>
+  </main>
+
+  <canvas id="confettiCanvas" aria-hidden="true"></canvas>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <!-- Help modal -->
+  <div class="modal-backdrop hidden" id="helpModal">
+    <div class="modal help-modal" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+      <button class="modal-close" id="helpClose" aria-label="Close help">×</button>
+      <div class="modal-mascot" aria-hidden="true">
+        <svg viewBox="0 0 260 310" class="bolt bolt-small">
+          <defs>
+            <linearGradient id="boltBodySmall" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#e9fbff"/>
+              <stop offset="1" stop-color="#9be8ff"/>
+            </linearGradient>
+            <linearGradient id="boltFaceSmall" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#173a5e"/>
+              <stop offset="1" stop-color="#0a1d34"/>
+            </linearGradient>
+            <linearGradient id="boltHatSmall" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#ffd166"/>
+              <stop offset="1" stop-color="#ff9f1c"/>
+            </linearGradient>
+          </defs>
+          <g class="bolt-bob">
+            <line x1="130" y1="42" x2="130" y2="18" stroke="#8ee7ff" stroke-width="7" stroke-linecap="round"/>
+            <circle class="antenna-ball" cx="130" cy="14" r="12" fill="#ff6b6b"/>
+            <path d="M67 82c0-30 24-54 54-54h18c30 0 54 24 54 54v38c0 30-24 54-54 54h-18c-30 0-54-24-54-54z" fill="url(#boltHatSmall)"/>
+            <rect x="58" y="70" width="144" height="118" rx="44" fill="url(#boltBodySmall)" stroke="#0b2c47" stroke-width="5"/>
+            <rect x="81" y="94" width="98" height="66" rx="28" fill="url(#boltFaceSmall)" stroke="#0b2c47" stroke-width="5"/>
+            <circle cx="108" cy="124" r="9" fill="#5ee7ff"/>
+            <circle cx="152" cy="124" r="9" fill="#5ee7ff"/>
+            <circle cx="111" cy="121" r="3" fill="#ffffff"/>
+            <circle cx="155" cy="121" r="3" fill="#ffffff"/>
+            <path d="M113 145q17 12 34 0" fill="none" stroke="#5ee7ff" stroke-width="5" stroke-linecap="round"/>
+            <rect x="89" y="185" width="82" height="76" rx="28" fill="#dff8ff" stroke="#0b2c47" stroke-width="5"/>
+            <circle cx="130" cy="220" r="23" fill="#0b2c47"/>
+            <circle cx="130" cy="220" r="13" fill="none" stroke="#5ee7ff" stroke-width="6" stroke-dasharray="7 5"/>
+            <path d="M89 204l-27 19M171 204l27 19" stroke="#0b2c47" stroke-width="12" stroke-linecap="round"/>
+            <circle cx="59" cy="225" r="12" fill="#ffd166" stroke="#0b2c47" stroke-width="5"/>
+            <circle cx="201" cy="225" r="12" fill="#ffd166" stroke="#0b2c47" stroke-width="5"/>
+            <path d="M101 260v17M159 260v17" stroke="#0b2c47" stroke-width="12" stroke-linecap="round"/>
+            <ellipse cx="101" cy="282" rx="20" ry="10" fill="#0b2c47"/>
+            <ellipse cx="159" cy="282" rx="20" ry="10" fill="#0b2c47"/>
+          </g>
+        </svg>
+      </div>
+      <div class="modal-copy">
+        <div class="eyebrow small"><span class="live-dot"></span> Bolt's guide</div>
+        <h2 id="helpTitle">Tap. Test. Tweak.</h2>
+        <p class="help-lead">There is no wrong answer — every test teaches you something.</p>
+        <div class="help-tip" id="helpTip">
+          <span class="help-tip-icon" aria-hidden="true">💡</span>
+          <span id="helpTipText">Pick a lab, change one thing, and press the big button.</span>
+        </div>
+        <div class="help-controls">
+          <div><span aria-hidden="true">🖱️</span> Click &amp; drag</div>
+          <div><span aria-hidden="true">🔁</span> Retry anytime</div>
+          <div><span aria-hidden="true">★</span> Complete missions</div>
+        </div>
+        <div class="help-actions">
+          <button class="primary-btn compact" id="helpPlay">Let's go</button>
+          <button class="ghost-btn" id="resetProgress">Reset progress</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success modal -->
+  <div class="modal-backdrop hidden" id="successModal">
+    <div class="modal success-modal" role="dialog" aria-modal="true" aria-labelledby="successTitle">
+      <div class="success-rays" aria-hidden="true"></div>
+      <div class="success-star-big" aria-hidden="true">★</div>
+      <div class="success-mascot" aria-hidden="true">🤖</div>
+      <h2 id="successTitle">MISSION COMPLETE!</h2>
+      <p class="success-message" id="successMessage">You did the thing!</p>
+      <div class="success-stars" id="successStars" aria-hidden="true">★</div>
+      <div class="success-actions">
+        <button class="primary-btn compact" id="nextLabBtn">Next lab <span aria-hidden="true">→</span></button>
+        <button class="ghost-btn" id="stayBtn">Keep playing</button>
+      </div>
+    </div>
+  </div>
+
+  <noscript>
+    <div class="noscript">Turn on JavaScript to enter the playground.</div>
+  </noscript>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

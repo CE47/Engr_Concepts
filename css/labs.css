@@ -1,0 +1,1134 @@
+/* ==========================================================================
+   Engineer Playground — lab-specific art, scenes and controls
+   ========================================================================== */
+
+/* ------------------------------ shared lab bits ------------------------- */
+
+.lab-stage:focus {
+  outline: none;
+}
+
+.lab-error {
+  display: grid;
+  place-items: center;
+  gap: 8px;
+  min-height: 360px;
+  padding: 40px 24px;
+  border-radius: 26px;
+  border: 1px dashed var(--line-strong);
+  background: rgba(8, 25, 45, 0.6);
+  text-align: center;
+}
+
+.lab-error-icon {
+  font-size: 3rem;
+  animation: wrenchWiggle 3s ease-in-out infinite;
+}
+
+.lab-error h3 {
+  margin: 0;
+  font-family: var(--font-head);
+  font-size: 1.7rem;
+}
+
+.lab-error p {
+  margin: 0;
+  max-width: 380px;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.lab-card {
+  animation: cardIn 0.55s cubic-bezier(0.2, 0.9, 0.2, 1) backwards;
+  animation-delay: calc(var(--i, 0) * 55ms);
+}
+
+.card-title {
+  display: block;
+}
+
+.card-tags,
+.card-play {
+  display: flex;
+}
+
+/* scene overlays */
+
+.scene-pill {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  max-width: calc(100% - 28px);
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(142, 231, 255, 0.24);
+  background: rgba(5, 20, 36, 0.7);
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  backdrop-filter: blur(8px);
+  pointer-events: none;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.scene-pill span {
+  font-size: 0.9rem;
+  line-height: 1;
+}
+
+.forces-scene .scene-pill {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.flight-scene .scene-pill {
+  left: auto;
+  right: 14px;
+}
+
+.scene-callout {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  z-index: 6;
+  padding: 9px 17px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #c7f8ff, var(--cyan));
+  color: #042137;
+  font-family: var(--font-head);
+  font-size: clamp(0.86rem, 1.4vw, 1.08rem);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.3), 0 0 22px rgba(94, 231, 255, 0.24);
+  opacity: 0;
+  transform: translate(-50%, -8px) scale(0.92);
+  transition: opacity 0.2s ease, transform 0.28s cubic-bezier(0.2, 1.5, 0.4, 1);
+  pointer-events: none;
+}
+
+.scene-callout.show {
+  opacity: 1;
+  transform: translate(-50%, 0) scale(1);
+}
+
+.scene-callout.good {
+  background: linear-gradient(135deg, #d8ffe9, var(--mint));
+  color: #063d24;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.3), 0 0 24px rgba(123, 241, 168, 0.35);
+}
+
+.scene-callout.bad {
+  background: linear-gradient(135deg, #ffd2d2, var(--coral));
+  color: #3c0610;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.3), 0 0 24px rgba(255, 107, 107, 0.35);
+}
+
+.energy-scene .scene-callout {
+  top: auto;
+  bottom: 16px;
+}
+
+.scene-shake {
+  animation: sceneShake 0.55s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+
+/* card art animations */
+
+.art-dash {
+  stroke-dasharray: 10 10;
+  animation: dashRun 1.4s linear infinite;
+}
+
+.art-flame {
+  transform-box: fill-box;
+  transform-origin: left center;
+  animation: flameFlicker 0.45s ease-in-out infinite alternate;
+}
+
+.art-flag {
+  transform-box: fill-box;
+  transform-origin: left bottom;
+  animation: flagSway 3s ease-in-out infinite;
+}
+
+.art-truck {
+  animation: truckDrive 3.4s ease-in-out infinite;
+}
+
+.art-gear {
+  animation: spin 12s linear infinite;
+}
+
+.art-ring {
+  animation: ringPulse 3s ease-in-out infinite;
+}
+
+.art-plane {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: planeFloat 3.4s ease-in-out infinite;
+}
+
+/* -------------------------------- forces -------------------------------- */
+
+.forces-scene {
+  background: #082844;
+}
+
+.attempt-strip {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-height: 30px;
+  padding-top: 2px;
+}
+
+.attempt-strip:empty::after {
+  content: "No tests yet";
+  color: var(--muted-2);
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.attempt-dot {
+  display: grid;
+  place-items: center;
+  min-width: 30px;
+  height: 30px;
+  padding: 0 7px;
+  border-radius: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--muted);
+  font-family: var(--font-head);
+  font-size: 0.76rem;
+  font-weight: 600;
+  animation: attemptPop 0.35s cubic-bezier(0.2, 1.5, 0.4, 1);
+}
+
+.attempt-dot.good {
+  border-color: rgba(123, 241, 168, 0.45);
+  background: rgba(123, 241, 168, 0.14);
+  color: var(--mint);
+  box-shadow: 0 0 14px rgba(123, 241, 168, 0.15);
+}
+
+/* ------------------------------ structures ------------------------------ */
+
+.bridge-scene {
+  background: #0d3557;
+}
+
+.brace-panel {
+  cursor: pointer;
+  outline: none;
+}
+
+.panel-hit {
+  fill: rgba(94, 231, 255, 0.015);
+  transition: fill 0.2s ease;
+}
+
+.brace-panel:hover .panel-hit {
+  fill: rgba(255, 209, 102, 0.08);
+}
+
+.brace-panel:focus-visible .panel-hit {
+  fill: rgba(255, 209, 102, 0.1);
+  stroke: var(--yellow);
+  stroke-width: 3;
+  stroke-dasharray: 8 8;
+}
+
+.panel-braces {
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.panel-braces line {
+  stroke: var(--yellow);
+  stroke-width: 6;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 5px rgba(255, 209, 102, 0.7));
+}
+
+.brace-panel.active .panel-braces {
+  opacity: 1;
+}
+
+.panel-plus {
+  transition: opacity 0.2s ease, scale 0.25s cubic-bezier(0.2, 1.4, 0.4, 1);
+}
+
+.panel-plus circle {
+  fill: rgba(255, 209, 102, 0.13);
+  stroke: var(--yellow);
+  stroke-width: 2;
+}
+
+.panel-plus path {
+  stroke: var(--yellow);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.brace-panel:hover .panel-plus {
+  scale: 1.15;
+}
+
+.brace-panel.active .panel-plus {
+  opacity: 0;
+  scale: 0.5;
+}
+
+.brace-panel.tap .panel-plus {
+  animation: panelTap 0.4s ease;
+}
+
+.brace-panel.active .panel-hit {
+  fill: rgba(255, 209, 102, 0.03);
+}
+
+.cloud {
+  animation: cloudDrift 24s ease-in-out infinite alternate;
+}
+
+.cloud-two {
+  animation-duration: 30s;
+  animation-direction: alternate-reverse;
+}
+
+.river-waves path {
+  animation: waveSlide 7s linear infinite;
+}
+
+.river-waves path:nth-child(2) {
+  animation-duration: 9.5s;
+  animation-direction: reverse;
+}
+
+.finish-flag path:nth-child(2) {
+  transform-box: fill-box;
+  transform-origin: left center;
+  animation: flagFlutter 2.6s ease-in-out infinite;
+}
+
+.strength-card {
+  padding: 13px 14px;
+  border-radius: 15px;
+  border: 1px solid rgba(255, 209, 102, 0.2);
+  background:
+    radial-gradient(120% 100% at 0% 0%, rgba(255, 209, 102, 0.1), transparent 65%),
+    rgba(255, 209, 102, 0.035);
+}
+
+.strength-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--muted);
+  font-size: 0.63rem;
+  font-weight: 900;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.strength-top span:last-child {
+  color: var(--yellow);
+  font-family: var(--font-head);
+  font-size: 0.9rem;
+  letter-spacing: 0;
+}
+
+.strength-segments {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin: 11px 0 9px;
+}
+
+.strength-segments i {
+  height: 11px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.075);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.22);
+  transition: background 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.strength-segments i.on {
+  background: linear-gradient(90deg, #ffe08a, var(--yellow), var(--orange));
+  box-shadow: 0 0 14px rgba(255, 209, 102, 0.5);
+  transform: scaleY(1.12);
+}
+
+.strength-note {
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.legend-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px 13px;
+  color: var(--muted-2);
+  font-size: 0.63rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.legend-row span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--cyan);
+}
+
+.legend-dot.cyan { background: var(--cyan); box-shadow: 0 0 8px var(--cyan); }
+.legend-dot.yellow { background: var(--yellow); box-shadow: 0 0 8px var(--yellow); }
+.legend-dot.mint { background: var(--mint); box-shadow: 0 0 8px var(--mint); }
+
+/* -------------------------------- machines ------------------------------ */
+
+.machine-scene {
+  background: #1a2148;
+}
+
+.machine-hanging-lamp ellipse {
+  animation: lampGlow 3.2s ease-in-out infinite;
+}
+
+.machine-tabs {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.machine-tabs .seg-btn {
+  font-size: 0.62rem;
+  letter-spacing: 0.03em;
+  padding-inline: 4px;
+}
+
+.machine-pane {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.torque-row {
+  display: grid;
+  gap: 8px;
+  padding: 11px 12px;
+  border-radius: 13px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.torque-bar {
+  display: grid;
+  grid-template-columns: 50px minmax(0, 1fr) 40px;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted-2);
+  font-size: 0.58rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
+
+.torque-bar b {
+  color: var(--muted);
+  font-family: var(--font-head);
+  font-size: 0.74rem;
+  font-weight: 600;
+  text-align: right;
+}
+
+.torque-track {
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07);
+  overflow: hidden;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.25);
+}
+
+.torque-track i {
+  display: block;
+  width: 10%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--cyan), var(--blue));
+  transition: width 0.25s ease;
+}
+
+.torque-bar:nth-child(2) .torque-track i {
+  background: linear-gradient(90deg, var(--yellow), var(--orange));
+}
+
+.machine-readout {
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px dashed rgba(94, 231, 255, 0.2);
+  background: rgba(94, 231, 255, 0.05);
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 800;
+  line-height: 1.4;
+  transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+}
+
+.machine-readout.good {
+  border-color: rgba(123, 241, 168, 0.45);
+  background: rgba(123, 241, 168, 0.1);
+  color: #c9ffe0;
+}
+
+.effort-card,
+.impact-card,
+.capacity-card {
+  display: grid;
+  gap: 8px;
+  padding: 12px 13px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.effort-card .meter-label b,
+.impact-card .meter-label b,
+.capacity-card .meter-label b {
+  color: var(--yellow);
+  font-family: var(--font-head);
+  font-size: 0.92rem;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.limit-line {
+  position: relative;
+  padding-top: 4px;
+  color: var(--muted-2);
+  font-size: 0.56rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-align: right;
+}
+
+.limit-line::before {
+  content: "";
+  position: absolute;
+  top: -5px;
+  right: 0;
+  width: 34%;
+  height: 2px;
+  background: repeating-linear-gradient(90deg, var(--coral) 0 4px, transparent 4px 8px);
+  opacity: 0.6;
+}
+
+.pulley-seg {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.machine-progress {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.machine-progress span {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.035);
+  font-size: 0.9rem;
+  filter: grayscale(1) opacity(0.5);
+  transition: filter 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.machine-progress span.done {
+  filter: none;
+  border-color: rgba(255, 209, 102, 0.45);
+  background: rgba(255, 209, 102, 0.12);
+  box-shadow: 0 0 16px rgba(255, 209, 102, 0.18);
+  transform: scale(1.08);
+}
+
+/* --------------------------------- energy ------------------------------- */
+
+.energy-scene {
+  background: #201b4a;
+}
+
+.energy-hud {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 3;
+  display: grid;
+  gap: 8px;
+  width: min(255px, 42%);
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(142, 231, 255, 0.2);
+  background: rgba(5, 20, 36, 0.66);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.24);
+}
+
+.energy-bar-row {
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr) 34px;
+  align-items: center;
+  gap: 7px;
+}
+
+.energy-label {
+  color: var(--muted);
+  font-size: 0.53rem;
+  font-weight: 900;
+  letter-spacing: 0.09em;
+}
+
+.energy-bar-row b {
+  color: var(--text);
+  font-family: var(--font-head);
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-align: right;
+}
+
+.energy-track {
+  height: 9px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.26);
+}
+
+.energy-track i {
+  display: block;
+  width: 0%;
+  height: 100%;
+  border-radius: inherit;
+  transition: width 0.2s ease;
+}
+
+.energy-track .pe {
+  background: linear-gradient(90deg, var(--yellow), var(--orange));
+  box-shadow: 0 0 12px rgba(255, 209, 102, 0.4);
+}
+
+.energy-track .ke {
+  background: linear-gradient(90deg, var(--cyan), var(--mint));
+  box-shadow: 0 0 12px rgba(123, 241, 168, 0.4);
+}
+
+.energy-note {
+  padding: 9px 11px;
+  border-radius: 11px;
+  background: rgba(255, 209, 102, 0.07);
+  border: 1px solid rgba(255, 209, 102, 0.15);
+  color: #ffe8a5;
+  font-size: 0.68rem;
+  font-weight: 800;
+  line-height: 1.4;
+}
+
+/* -------------------------------- circuits ------------------------------ */
+
+.circuit-scene {
+  background: #061725;
+}
+
+.circuit-scene::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 78% 54%, rgba(255, 209, 102, 0.18), transparent 38%);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.circuit-scene.lit::after {
+  opacity: 1;
+}
+
+.switch-hit {
+  cursor: pointer;
+  outline: none;
+}
+
+.switch-hit:focus-visible rect:first-child {
+  stroke: var(--yellow);
+  stroke-width: 3;
+  stroke-dasharray: 8 8;
+}
+
+.switch-lever {
+  transform-origin: 400px 190px;
+  transition: transform 0.28s cubic-bezier(0.2, 1.4, 0.4, 1);
+}
+
+.material-pop {
+  animation: materialPop 0.4s cubic-bezier(0.2, 1.5, 0.4, 1);
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.circuit-status {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 11px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 800;
+  line-height: 1.4;
+  transition: border-color 0.25s ease, background 0.25s ease, color 0.25s ease;
+}
+
+.status-dot {
+  flex: 0 0 auto;
+  width: 9px;
+  height: 9px;
+  margin-top: 4px;
+  border-radius: 50%;
+  background: var(--muted-2);
+  box-shadow: 0 0 0 3px rgba(111, 143, 167, 0.12);
+}
+
+.circuit-status.good {
+  border-color: rgba(123, 241, 168, 0.4);
+  background: rgba(123, 241, 168, 0.09);
+  color: #c9ffe0;
+}
+
+.circuit-status.good .status-dot {
+  background: var(--mint);
+  box-shadow: 0 0 12px var(--mint);
+  animation: livePulse 1.6s ease-out infinite;
+}
+
+.conductor-note {
+  color: var(--muted-2);
+  font-size: 0.66rem;
+  font-weight: 800;
+  line-height: 1.45;
+  text-align: center;
+}
+
+/* -------------------------------- buoyancy ------------------------------ */
+
+.boat-scene {
+  background: #103a5f;
+}
+
+.boat-bob {
+  transform-box: view-box;
+  transform-origin: 585px 370px;
+  animation: boatBob 4.2s ease-in-out infinite;
+}
+
+.dock-crate {
+  cursor: pointer;
+  transition: opacity 0.25s ease, filter 0.2s ease;
+}
+
+.dock-crate:hover {
+  filter: brightness(1.18) drop-shadow(0 0 8px rgba(255, 209, 102, 0.5));
+}
+
+.dock-crate:focus-visible {
+  outline: none;
+  filter: brightness(1.2) drop-shadow(0 0 8px var(--yellow));
+}
+
+.dock-crate.gone {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.crate-drop {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: crateDrop 0.42s cubic-bezier(0.2, 1.5, 0.4, 1);
+}
+
+.bubble-rise {
+  animation: bubbleRise 1.5s ease-out forwards;
+}
+
+.buoyancy-arrow {
+  animation: arrowBob 3s ease-in-out infinite;
+}
+
+.weight-arrow {
+  animation: arrowBob 3s ease-in-out infinite reverse;
+}
+
+.load-card {
+  padding: 13px 14px;
+  border-radius: 15px;
+  border: 1px solid rgba(255, 209, 102, 0.18);
+  background:
+    radial-gradient(120% 100% at 100% 0%, rgba(255, 209, 102, 0.1), transparent 65%),
+    rgba(255, 209, 102, 0.035);
+}
+
+.load-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--muted);
+  font-size: 0.63rem;
+  font-weight: 900;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.load-top b {
+  color: var(--yellow);
+  font-family: var(--font-head);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.crate-pips {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 6px;
+  margin: 11px 0 9px;
+}
+
+.crate-pips i {
+  aspect-ratio: 1;
+  border-radius: 5px;
+  border: 1px solid rgba(255, 209, 102, 0.2);
+  background: rgba(255, 255, 255, 0.035);
+  transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.crate-pips i.on {
+  background: linear-gradient(145deg, #ffe08a, var(--yellow));
+  border-color: var(--yellow);
+  box-shadow: 0 0 10px rgba(255, 209, 102, 0.35);
+  transform: scale(1.06) rotate(-3deg);
+}
+
+.load-note {
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.meter-label.small {
+  font-size: 0.55rem;
+  color: var(--muted-2);
+}
+
+/* -------------------------------- materials ----------------------------- */
+
+.material-scene {
+  background: #2a204e;
+}
+
+.pad-material {
+  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.25));
+}
+
+.pad-pop {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: padPop 0.38s cubic-bezier(0.2, 1.4, 0.4, 1);
+}
+
+#eggGroup.cracked #eggShell {
+  fill: #ffe7b0;
+}
+
+#eggGroup.cracked #eggGoggles {
+  opacity: 0.35;
+}
+
+.height-ruler {
+  opacity: 0.9;
+}
+
+/* --------------------------------- flight ------------------------------- */
+
+.flight-scene {
+  background: #0c3153;
+}
+
+.ghost-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted-2);
+  font-size: 0.66rem;
+  font-weight: 800;
+  line-height: 1.4;
+}
+
+.ghost-note span {
+  font-size: 0.95rem;
+}
+
+/* -------------------------------- keyframes ----------------------------- */
+
+@keyframes cardIn {
+  from {
+    opacity: 0;
+    translate: 0 22px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@keyframes dashRun {
+  to { stroke-dashoffset: -20; }
+}
+
+@keyframes flameFlicker {
+  from { transform: scaleX(0.85) scaleY(0.9); opacity: 0.75; }
+  to { transform: scaleX(1.12) scaleY(1.08); opacity: 1; }
+}
+
+@keyframes flagSway {
+  0%, 100% { transform: rotate(-2deg); }
+  50% { transform: rotate(4deg); }
+}
+
+@keyframes flagFlutter {
+  0%, 100% { transform: skewY(0deg) scaleX(1); }
+  50% { transform: skewY(-4deg) scaleX(0.92); }
+}
+
+@keyframes truckDrive {
+  0%, 100% { transform: translateX(-5px); }
+  50% { transform: translateX(7px); }
+}
+
+@keyframes ringPulse {
+  0%, 100% { scale: 1; opacity: 0.85; }
+  50% { scale: 1.08; opacity: 1; }
+}
+
+@keyframes planeFloat {
+  0%, 100% { transform: translate(0, 0) rotate(-2deg); }
+  50% { transform: translate(7px, -7px) rotate(2deg); }
+}
+
+@keyframes sceneShake {
+  0%, 100% { transform: translate(0, 0); }
+  15% { transform: translate(-7px, 3px) rotate(-0.4deg); }
+  30% { transform: translate(6px, -4px) rotate(0.4deg); }
+  45% { transform: translate(-5px, 2px); }
+  60% { transform: translate(4px, -2px); }
+  75% { transform: translate(-2px, 1px); }
+}
+
+@keyframes attemptPop {
+  from { opacity: 0; scale: 0.4; }
+  to { opacity: 1; scale: 1; }
+}
+
+@keyframes panelTap {
+  0% { scale: 1; }
+  45% { scale: 1.35; }
+  100% { scale: 1; }
+}
+
+@keyframes cloudDrift {
+  from { transform: translateX(-28px); }
+  to { transform: translateX(28px); }
+}
+
+@keyframes waveSlide {
+  to { transform: translateX(-60px); }
+}
+
+@keyframes lampGlow {
+  0%, 100% { opacity: 0.18; }
+  50% { opacity: 0.32; }
+}
+
+@keyframes materialPop {
+  from { opacity: 0; scale: 0.4; }
+  to { opacity: 1; scale: 1; }
+}
+
+@keyframes boatBob {
+  0%, 100% { transform: translateY(0) rotate(-0.5deg); }
+  50% { transform: translateY(-9px) rotate(0.7deg); }
+}
+
+@keyframes crateDrop {
+  from { opacity: 0; scale: 0.45; }
+  to { opacity: 1; scale: 1; }
+}
+
+@keyframes bubbleRise {
+  from { opacity: 0.7; translate: 0 0; }
+  to { opacity: 0; translate: 0 -95px; }
+}
+
+@keyframes arrowBob {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -7px; }
+}
+
+@keyframes padPop {
+  0% { scale: 1; }
+  40% { scale: 1.04 0.82; }
+  100% { scale: 1; }
+}
+
+/* -------------------------------- responsive ---------------------------- */
+
+@media (max-width: 1180px) {
+  .energy-hud {
+    width: min(240px, 45%);
+  }
+}
+
+@media (max-width: 980px) {
+  .control-panel {
+    position: static;
+  }
+
+  .machine-pane,
+  .effort-card,
+  .impact-card,
+  .capacity-card {
+    max-width: 560px;
+  }
+}
+
+@media (max-width: 760px) {
+  .scene-pill {
+    top: 9px;
+    left: 9px;
+    padding: 5px 9px;
+    font-size: 0.58rem;
+    letter-spacing: 0.06em;
+  }
+
+  .flight-scene .scene-pill {
+    left: auto;
+    right: 9px;
+  }
+
+  .scene-callout {
+    top: 9px;
+    padding: 7px 13px;
+    font-size: 0.82rem;
+  }
+
+  .energy-hud {
+    top: 9px;
+    right: 9px;
+    width: min(210px, 48%);
+    padding: 9px 10px;
+    border-radius: 12px;
+  }
+
+  .energy-bar-row {
+    grid-template-columns: 48px minmax(0, 1fr) 30px;
+    gap: 5px;
+  }
+
+  .energy-label {
+    font-size: 0.46rem;
+  }
+
+  .energy-bar-row b {
+    font-size: 0.62rem;
+  }
+
+  .attempt-strip:empty::after {
+    font-size: 0.58rem;
+  }
+}
+
+@media (max-width: 520px) {
+  .scene-pill {
+    max-width: 52%;
+  }
+
+  .energy-hud {
+    width: 55%;
+  }
+
+  .energy-note,
+  .ghost-note,
+  .conductor-note {
+    display: none;
+  }
+
+  .torque-bar {
+    grid-template-columns: 44px minmax(0, 1fr) 36px;
+  }
+
+  .machine-tabs .seg-btn {
+    font-size: 0.54rem;
+  }
+
+  .crate-pips {
+    gap: 4px;
+  }
+
+  .strength-segments {
+    gap: 4px;
+  }
+
+  .scene-callout {
+    max-width: 88%;
+    white-space: normal;
+    text-align: center;
+    line-height: 1.15;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lab-card {
+    animation-delay: 0ms !important;
+  }
+}
